@@ -8,7 +8,7 @@
 #include "arp.h"
 
 int parse_ethernet(uint8_t *buffer, size_t size) {
-    if (sizeof(struct ethhdr) > size) return 1;
+    if (sizeof(struct ethhdr) > size) return -1;
 
     struct ethhdr *eth = (struct ethhdr *)buffer;
     size_t ethhdr_size = sizeof(struct ethhdr);

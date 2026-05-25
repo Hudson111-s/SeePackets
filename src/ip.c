@@ -7,11 +7,11 @@
 #include "transport.h"
 
 int parse_ipv4(uint8_t *buffer, size_t size) {
-    if (sizeof(struct iphdr) > size) return 1;
+    if (sizeof(struct iphdr) > size) return -1;
 
     struct iphdr *ip = (struct iphdr *)buffer;
     size_t iphdr_size = ip->ihl * 4;
-    if (iphdr_size > size) return 1;
+    if (iphdr_size > size) return -1;
 
     size -= iphdr_size;
     buffer += iphdr_size;
