@@ -15,7 +15,7 @@ int parse_ethernet(uint8_t *buffer, size_t size) {
 
     size -= ethhdr_size;
     buffer += ethhdr_size;
-
+    
     switch (ntohs(eth->h_proto)) {
         case ETH_P_IP: parse_ipv4(buffer, size); break;
         case ETH_P_IPV6: parse_ipv6(buffer, size); break;

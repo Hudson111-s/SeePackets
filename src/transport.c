@@ -3,6 +3,7 @@
 #include <linux/tcp.h>
 #include <linux/udp.h>
 #include <linux/icmp.h>
+#include <linux/icmpv6.h>
 #include <arpa/inet.h>
 
 #include "transport.h"
@@ -43,6 +44,19 @@ int parse_icmp(uint8_t *buffer, size_t size) {
 
     size -= icmphdr_size;
     buffer += icmphdr_size;
+
+    print_payload(buffer, size);
+    return 0;
+}
+
+int parse_icmp6(uint8_t *buffer, size_t size) {
+    if (sizeof(struct icmp6hdr) > size) return -1;
+
+    struct icmp6hdr *icmp6 = (struct icmp6hdr *)buffer;
+    size_t icmp6hdr_size = sizeof(struct icmp6hdr);
+
+    size -= icmp6hdr_size;
+    buffer += icmp6hdr_size;
 
     print_payload(buffer, size);
     return 0;

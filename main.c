@@ -35,7 +35,6 @@ int main(int argc, char **arcv) {
     }
 
     printf("Listening on %s\n", iface);
-
     uint8_t buffer[65536]; // Max eth frame size
 
     while (1) {
