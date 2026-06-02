@@ -19,6 +19,7 @@ int parse_tcp(uint8_t *buffer, size_t size) {
     size -= tcphdr_size;
     buffer += tcphdr_size;
 
+    print_tcphdr(tcp);
     print_payload(buffer, size);
     return 0;
 }
@@ -32,6 +33,7 @@ int parse_udp(uint8_t *buffer, size_t size) {
     size -= udphdr_size;
     buffer += udphdr_size;
 
+    print_udphdr(udp);
     print_payload(buffer, size);
     return 0;
 }
@@ -45,6 +47,7 @@ int parse_icmp(uint8_t *buffer, size_t size) {
     size -= icmphdr_size;
     buffer += icmphdr_size;
 
+    printf("--- (ICMP) ---\n");
     print_payload(buffer, size);
     return 0;
 }
@@ -58,6 +61,7 @@ int parse_icmp6(uint8_t *buffer, size_t size) {
     size -= icmp6hdr_size;
     buffer += icmp6hdr_size;
 
+    printf("--- (ICMPv6) ---\n");
     print_payload(buffer, size);
     return 0;
 }

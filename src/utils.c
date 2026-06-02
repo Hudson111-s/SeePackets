@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <linux/tcp.h>
+#include <linux/udp.h>
+#include <arpa/inet.h>
 
 #include "utils.h"
 
@@ -35,6 +38,31 @@ void print_payload(const uint8_t *data, size_t data_size) {
 
         printf("\n");
     }
+}
 
-    printf("-------------------------------\n");
+void print_tcphdr(struct tcphdr *tcp) {
+    printf("--- (TCP) ---\n");
+    printf("Seq=%u Ack=%u Win=%u\n", 
+        ntohl(tcp->seq), 
+        ntohl(tcp->ack_seq), 
+        ntohs(tcp->window));
+
+    printf("Flags: ");
+    if (tcp->syn) printf("SYN ");
+    if (tcp->ack) printf("ACK ");
+    if (tcp->fin) printf("FIN ");
+    if (tcp->rst) printf("RST ");
+    if (tcp->psh) printf("PSH ");
+    if (tcp->urg) printf("URG ");
+    if (tcp->ece) printf("ECE ");
+    if (tcp->cwr) printf("CWR ");
+    printf("\n");
+}
+
+void print_udphdr(struct udphdr *udp) {
+    printf("--- (UDP) ---\n");
+    printf("Src=%u Dst=%u Len=%u\n", 
+        ntohs(udp->source), 
+        ntohs(udp->dest), 
+        ntohs(udp->len));
 }
