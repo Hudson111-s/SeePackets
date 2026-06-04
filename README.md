@@ -1,3 +1,7 @@
+> [!WARNING]  
+> This project is still in development and may be unstable.
+
+
 # SeePackets
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
