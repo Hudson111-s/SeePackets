@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdint.h>
-#include <linux/tcp.h>
-#include <linux/udp.h>
+#include <stddef.h>
+#include <netinet/tcp.h>
+#include <netinet/udp.h>
 #include <arpa/inet.h>
 
 #include "utils.h"
 
 void print_payload(const uint8_t *data, size_t data_size) {
-    if (data_size <= 0) {
+    if (data_size == 0) {
         printf("No payload.\n");
         return;
     } 
@@ -54,8 +55,6 @@ void print_tcphdr(struct tcphdr *tcp) {
     if (tcp->rst) printf("RST ");
     if (tcp->psh) printf("PSH ");
     if (tcp->urg) printf("URG ");
-    if (tcp->ece) printf("ECE ");
-    if (tcp->cwr) printf("CWR ");
     printf("\n");
 }
 

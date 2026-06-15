@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <linux/tcp.h>
-#include <linux/udp.h>
-#include <linux/icmp.h>
-#include <linux/icmpv6.h>
+#include <stddef.h>
+#include <netinet/tcp.h>
+#include <netinet/udp.h>
+#include <netinet/ip_icmp.h>
+#include <netinet/icmp6.h>
 #include <arpa/inet.h>
 
 #include "transport.h"
@@ -53,10 +54,10 @@ int parse_icmp(uint8_t *buffer, size_t size) {
 }
 
 int parse_icmp6(uint8_t *buffer, size_t size) {
-    if (sizeof(struct icmp6hdr) > size) return -1;
+    if (sizeof(struct icmp6_hdr) > size) return -1;
 
-    struct icmp6hdr *icmp6 = (struct icmp6hdr *)buffer;
-    size_t icmp6hdr_size = sizeof(struct icmp6hdr);
+    struct icmp6_hdr *icmp6 = (struct icmp6_hdr *)buffer;
+    size_t icmp6hdr_size = sizeof(struct icmp6_hdr);
 
     size -= icmp6hdr_size;
     buffer += icmp6hdr_size;

@@ -9,7 +9,7 @@
 
 #include "ethernet.h"
 
-int main(int argc, char **arcv) {
+int main(int argc, char **argv) {
     int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if (sock < 0) {
         perror("socket");
@@ -38,7 +38,7 @@ int main(int argc, char **arcv) {
     uint8_t buffer[65536]; // Max eth frame size
 
     while (1) {
-        int size = recvfrom(sock, buffer, sizeof(buffer), 0, NULL, NULL);
+        ssize_t size = recvfrom(sock, buffer, sizeof(buffer), 0, NULL, NULL);
         if (size < 0) {
             perror("recvfrom");
             break;
