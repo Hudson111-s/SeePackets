@@ -18,6 +18,12 @@ target_compile_definitions(SeePackets PRIVATE
     _GNU_SOURCE
 )
 
+target_compile_options(SeePackets PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+
 target_include_directories(SeePackets PRIVATE
     include
 )

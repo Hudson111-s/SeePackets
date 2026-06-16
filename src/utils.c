@@ -15,11 +15,11 @@ void print_payload(const uint8_t *data, size_t data_size) {
     } 
 
     printf("--- Payload size (%ld) ---\n", data_size);
-    for (int i = 0; i < data_size; i += 16) {
-        printf("%04X ", i);
+    for (size_t i = 0; i < data_size; i += 16) {
+        printf("%04X ", (int)i);
 
         // Print hex.
-        for (int j = 0; j < 16; j++) {
+        for (size_t j = 0; j < 16; j++) {
             if (i + j < data_size) {
                 printf("%02X ", data[i + j]);
             } else {
@@ -30,7 +30,7 @@ void print_payload(const uint8_t *data, size_t data_size) {
         printf(" | ");
 
         // Print byte/char if readable.
-        for (int j = 0; j < 16; j++) {
+        for (size_t j = 0; j < 16; j++) {
             if (i + j < data_size) {
                 char byte = data[i + j];
                 printf("%c", isprint(byte) ? byte : '.');

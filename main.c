@@ -10,6 +10,9 @@
 #include "ethernet.h"
 
 int main(int argc, char **argv) {
+    (void)argc;
+    (void)argv;
+
     int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if (sock < 0) {
         perror("socket");
