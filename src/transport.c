@@ -43,13 +43,12 @@ int parse_icmp(uint8_t *buffer, size_t size) {
     if (sizeof(struct icmphdr) > size) return -1;
 
     struct icmphdr *icmp = (struct icmphdr *)buffer;
-    (void)icmp; // Placeholder
     size_t icmphdr_size = sizeof(struct icmphdr);
 
     size -= icmphdr_size;
     buffer += icmphdr_size;
 
-    printf("--- (ICMP) ---\n");
+    print_icmphdr(icmp);
     print_payload(buffer, size);
     return 0;
 }
@@ -58,13 +57,12 @@ int parse_icmp6(uint8_t *buffer, size_t size) {
     if (sizeof(struct icmp6_hdr) > size) return -1;
 
     struct icmp6_hdr *icmp6 = (struct icmp6_hdr *)buffer;
-    (void)icmp6; // Placeholder
     size_t icmp6hdr_size = sizeof(struct icmp6_hdr);
 
     size -= icmp6hdr_size;
     buffer += icmp6hdr_size;
 
-    printf("--- (ICMPv6) ---\n");
+    print_icmp6_hdr(icmp6);
     print_payload(buffer, size);
     return 0;
 }
