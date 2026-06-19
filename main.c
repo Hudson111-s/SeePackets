@@ -8,10 +8,17 @@
 #include <net/if.h>
 
 #include "ethernet.h"
+#include "utils.h"
 
 int main(int argc, char *argv[]) {
-    (void)argc;
-    (void)argv;
+    see_config *conf = &(see_config){
+        .out          = stdout,
+        .iface        = "eth0",
+        .proto_mask   = 0,
+        .ip_mode      = IPMODE_ANY
+    };
+    
+    if (parse_args(argc, argv, conf) == -1) return 1;
 
     int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if (sock < 0) {
@@ -19,7 +26,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *iface = "eth0";
+    const char *iface = conf->iface;
 
     struct sockaddr_ll sll;
     memset(&sll, 0, sizeof(sll));
@@ -38,7 +45,7 @@ int main(int argc, char *argv[]) {
     }
 
     printf("Listening on %s\n", iface);
-    uint8_t buffer[65536]; // Max eth frame size
+    uint8_t buffer[ETH_FRAME_SIZE];
 
     while (1) {
         ssize_t size = recvfrom(sock, buffer, sizeof(buffer), 0, NULL, NULL);
@@ -47,7 +54,7 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        parse_ethernet(buffer, size);
+        parse_ethernet(buffer, size, conf);
     }
 
     return 0;
