@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <linux/if_packet.h>
@@ -17,13 +18,20 @@ int main(int argc, char *argv[]) {
         .proto_mask   = 0,
         .ip_mode      = IPMODE_ANY
     };
-    
-    if (parse_args(argc, argv, conf) == -1) return 1;
 
-    int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+    int err = 0;
+    int sock = -1;
+    
+    if (parse_args(argc, argv, conf) == -1) {        
+        err = 1;    
+        goto cleanup;
+    }
+
+    sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if (sock < 0) {
         perror("socket");
-        return 1;
+        err = 1;
+        goto cleanup;
     }
 
     const char *iface = conf->iface;
@@ -36,15 +44,17 @@ int main(int argc, char *argv[]) {
     sll.sll_ifindex = if_nametoindex(iface);
     if (sll.sll_ifindex == 0) {
         perror("if_nametoindex");
-        return 1;
+        err = 1;
+        goto cleanup;
     }
 
     if (bind(sock, (struct sockaddr *)&sll, sizeof(sll)) < 0) {
         perror("bind");
-        return 1;
+        err = 1;
+        goto cleanup;
     }
 
-    printf("Listening on %s\n", iface);
+    fprintf(conf->out, "Listening on %s\n", iface);
     uint8_t buffer[ETH_FRAME_SIZE];
 
     while (1) {
@@ -57,5 +67,9 @@ int main(int argc, char *argv[]) {
         parse_ethernet(buffer, size, conf);
     }
 
-    return 0;
+    cleanup:
+        if (sock >= 0) close(sock);
+        if (conf->out != stdout) fclose(conf->out);
+
+        return err;
 }
