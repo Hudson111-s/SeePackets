@@ -1,13 +1,10 @@
 > [!WARNING]  
 > This project is still in development and may be unstable.
 
-
 # SeePackets
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-
 A lightweight packet sniffer written in C using raw sockets.
-
 
 ## Current features
 
@@ -17,12 +14,10 @@ A lightweight packet sniffer written in C using raw sockets.
 - Port filtering for TCP/UDP
 - Output files
 
-
 ## Platform Support
 
 **SeePackets** is currently restricted to Linux systems because it relies exclusively on `AF_PACKET` found in the Linux kernel. 
 Support for other systems may be added in the future.
-
 
 ## Build instructions
 
@@ -42,14 +37,12 @@ Support for other systems may be added in the future.
     cd SeePackets
     ```
 
-
 2. **Build**
 
     ```bash
     cmake -S . -B build
     cmake --build build
     ```
-
 
 ## Usage
 
@@ -67,11 +60,9 @@ Options:
   -h, --help               Display usage
 ```
 
-
 ## Contribution
 
 Contributions are very welcome! Feel free to open [issues](https://github.com/Hudson111-s/SeePackets/issues) or submit [pull requests](https://github.com/Hudson111-s/SeePackets/pulls).
-
 
 ## Author
 
