@@ -13,8 +13,8 @@ int parse_arp(uint8_t *buffer, size_t size, see_config *conf) {
 
     if (conf->addr_set) {
         if (memcmp(arp->arp_spa, &conf->addr, sizeof(struct in_addr)) != 0 &&
-        memcmp(arp->arp_tpa, &conf->addr, sizeof(struct in_addr)) != 0) {
-            return 0;
+            memcmp(arp->arp_tpa, &conf->addr, sizeof(struct in_addr)) != 0) {
+                return 0;
         }
     }
 

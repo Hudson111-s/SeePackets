@@ -16,8 +16,8 @@ int parse_ipv4(uint8_t *buffer, size_t size, see_config *conf) {
 
     struct iphdr *ip = (struct iphdr *)buffer;
     size_t iphdr_size = ip->ihl * 4;
+    if (iphdr_size > size || iphdr_size < sizeof(struct iphdr)) return -1;
     uint16_t total_len = ntohs(ip->tot_len);
-    if (iphdr_size > size) return -1;
     if (total_len < iphdr_size || total_len > size) return -1;
 
     // Check ipv4 filter.
@@ -74,12 +74,12 @@ int parse_ipv6(uint8_t *buffer, size_t size, see_config *conf) {
     uint16_t total_len = ntohs(ip6->ip6_plen) + sizeof(struct ip6_hdr);
     if (total_len > size) return -1;
 
-        // Check ipv6 filter.
-        if (conf->addr6_set &&
-            (memcmp(&ip6->ip6_src, &conf->addr6, sizeof(struct in6_addr)) != 0 ||
-            memcmp(&ip6->ip6_dst, &conf->addr6, sizeof(struct in6_addr)) != 0)) {
-                return 0;
-            }
+    // Check ipv6 filter.
+    if (conf->addr6_set &&
+        (memcmp(&ip6->ip6_src, &conf->addr6, sizeof(struct in6_addr)) != 0 &&
+        memcmp(&ip6->ip6_dst, &conf->addr6, sizeof(struct in6_addr)) != 0)) {
+            return 0;
+     }
             
     size_t offset = sizeof(struct ip6_hdr);
     uint8_t next_header = ip6->ip6_nxt;
@@ -87,12 +87,23 @@ int parse_ipv6(uint8_t *buffer, size_t size, see_config *conf) {
     while(1) {
         if (next_header == IPPROTO_TCP || next_header == IPPROTO_UDP || 
             next_header == IPPROTO_ICMPV6) break; // Check if header is transport
+        
+        // If no next header.
+        if (next_header == IPPROTO_NONE) return 0; 
 
         if (offset + sizeof(struct ip6_ext) > size) return -1;
         struct ip6_ext *exthdr = (struct ip6_ext *)(buffer + offset);
 
-        size_t exthdr_size = (exthdr->ip6e_len + 1) * 8;
-        if (offset + exthdr_size > size) return -1;
+        // Handle fragment and auth headers.
+        size_t exthdr_size;
+        if (next_header == IPPROTO_FRAGMENT) {
+            exthdr_size = 8; 
+        } else if (next_header == IPPROTO_AH) {
+            exthdr_size = (exthdr->ip6e_len + 2) * 4; 
+        } else {
+            exthdr_size = (exthdr->ip6e_len + 1) * 8; 
+        }
+        if (offset + exthdr_size > size || exthdr_size < sizeof(struct ip6_ext)) return -1;
 
         offset += exthdr_size;
         next_header = exthdr->ip6e_nxt;

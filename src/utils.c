@@ -93,7 +93,7 @@ int parse_args(int argc, char *argv[], see_config *conf) {
                     else if (!strcmp(token, "arp"))
                         conf->proto_mask |= PROTO_ARP;
                     else {
-                        fprintf(stderr, "Unknown protocol: %s\n", optarg);
+                        fprintf(stderr, "Unknown protocol: %s\n", token);
                         return -1;
                     }
 

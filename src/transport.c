@@ -15,14 +15,15 @@ int parse_tcp(uint8_t *buffer, size_t size, see_config *conf) {
 
     struct tcphdr *tcp = (struct tcphdr *)buffer;
     size_t tcphdr_size = tcp->doff * 4;
-    if (tcphdr_size > size) return -1;
+    if (tcphdr_size > size || tcphdr_size < sizeof(struct tcphdr)) return -1;
 
+    // Filter port.
     if (conf->port_set && (ntohs(tcp->source) != conf->port && ntohs(tcp->dest) != conf->port)) {
         return -1;
     }
 
-    size -= tcphdr_size;
-    buffer += tcphdr_size;
+    // size -= tcphdr_size;
+    // buffer += tcphdr_size;
 
     // Filtering by port causes the ip header to still print
     // even if the port is invalid, therefore printing will 
@@ -37,14 +38,15 @@ int parse_udp(uint8_t *buffer, size_t size, see_config *conf) {
     if (sizeof(struct udphdr) > size) return -1;
 
     struct udphdr *udp = (struct udphdr *)buffer;
-    size_t udphdr_size = sizeof(struct udphdr);
+    // size_t udphdr_size = sizeof(struct udphdr);
 
+    // Filter port.
     if (conf->port_set && (ntohs(udp->source) != conf->port && ntohs(udp->dest) != conf->port)) {
         return -1;
     }
 
-    size -= udphdr_size;
-    buffer += udphdr_size;
+    // size -= udphdr_size;
+    // buffer += udphdr_size;
 
     // Filtering by port causes the ip header to still print
     // even if the port is invalid, therefore printing will 
