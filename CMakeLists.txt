@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
-project(SeePackets C)
+project(SeePackets 
+    VERSION 1.0.0
+    DESCRIPTION "Packet sniffer in C"
+    LANGUAGES C
+)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
